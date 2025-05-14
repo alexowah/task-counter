@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Task Progress Counter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f5f7fa;
+      color: #333;
+      padding: 40px;
+      max-width: 500px;
+      margin: auto;
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    label {
+      font-weight: 600;
+      margin-top: 15px;
+      display: block;
+    }
+    input, select {
+      padding: 8px 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 5px;
+    }
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      margin-top: 15px;
+    }
+    .checkbox-group input {
+      width: auto;
+      margin-right: 10px;
+    }
+    #counter {
+      font-size: 28px;
+      text-align: center;
+      margin-top: 30px;
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <h2>📊 Task Progress Counter</h2>
+
+  <label for="startTime">Start Time:</label>
+  <input type="time" id="startTime">
+
+  <label for="tasksPerHour">Tasks Per Hour:</label>
+  <select id="tasksPerHour">
+    <!-- Generate options from 15 to 50 -->
+    <script>
+      for (let i = 15; i <= 50; i++) {
+        document.write(`<option value="${i}">${i}</option>`);
+      }
+    </script>
+  </select>
+
+  <div class="checkbox-group">
+    <input type="checkbox" id="lunchBreak">
+    <label for="lunchBreak" style="margin: 0;">Lunch Break Taken</label>
+  </div>
+
+  <label for="lunchDuration">Lunch Duration:</label>
+  <select id="lunchDuration">
+    <option value="30">30 Minutes</option>
+    <option value="60">60 Minutes</option>
+  </select>
+
+  <div id="counter">Tasks completed: 0</div>
+
+  <script>
+    const TOTAL_HOURS = 8;
+
+    function updateCounter() {
+      const startTime = document.getElementById('startTime').value;
+      const lunchChecked = document.getElementById('lunchBreak').checked;
+      const lunchMinutes = lunchChecked ? parseInt(document.getElementById('lunchDuration').value) : 0;
+      const tasksPerHour = parseInt(document.getElementById('tasksPerHour').value);
+
+      if (!startTime || isNaN(tasksPerHour)) return;
+
+      const [startHour, startMinute] = startTime.split(":").map(Number);
+      const start = new Date();
+      start.setHours(startHour, startMinute, 0, 0);
+
+      const now = new Date();
+      let diffMs = now - start - (lunchMinutes * 60 * 1000);
+      const diffHours = Math.max(diffMs / (1000 * 60 * 60), 0);
+
+      const maxTasks = tasksPerHour * TOTAL_HOURS;
+      const tasksDone = Math.min(Math.floor(diffHours * tasksPerHour), maxTasks);
+
+      document.getElementById('counter').innerText = `Tasks completed: ${tasksDone}`;
+    }
+
+    setInterval(updateCounter, 1000);
+  </script>
+
+</body>
+</html>
