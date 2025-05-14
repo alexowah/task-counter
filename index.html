@@ -56,15 +56,14 @@
   <h2>📊 Task Progress Counter</h2>
 
   <label for="startTime">Start Time:</label>
-  <select id="startTime">
-    <!-- JavaScript will generate 15-minute increments between 6:00 AM and 12:00 PM -->
-  </select>
+  <select id="startTime"></select>
 
   <label for="tasksPerHour">Tasks Per Hour:</label>
   <select id="tasksPerHour">
     <script>
       for (let i = 15; i <= 50; i++) {
-        document.write(`<option value="${i}">${i}</option>`);
+        const selected = i === 25 ? 'selected' : '';
+        document.write(`<option value="${i}" ${selected}>${i}</option>`);
       }
     </script>
   </select>
@@ -85,15 +84,17 @@
   <script>
     const TOTAL_HOURS = 8;
 
-    // Populate startTime dropdown with 15-minute intervals (6:00 AM to 12:00 PM)
+    // Populate startTime dropdown with 1-minute increments from 6:00 AM to 12:00 PM
     const startTimeSelect = document.getElementById('startTime');
-    for (let hour = 6; hour <= 12; hour++) {
-      for (let min = 0; min < 60; min += 15) {
-        const hourStr = hour.toString().padStart(2, '0');
-        const minStr = min.toString().padStart(2, '0');
+    const startHour = 6;
+    const endHour = 12;
+    for (let h = startHour; h <= endHour; h++) {
+      for (let m = 0; m < 60; m++) {
+        const hourStr = h.toString().padStart(2, '0');
+        const minStr = m.toString().padStart(2, '0');
         const value = `${hourStr}:${minStr}`;
-        const displayHour = hour > 12 ? hour - 12 : hour;
-        const ampm = hour < 12 ? 'AM' : 'PM';
+        const displayHour = h > 12 ? h - 12 : h;
+        const ampm = h < 12 ? 'AM' : 'PM';
         const display = `${displayHour}:${minStr} ${ampm}`;
         const option = document.createElement('option');
         option.value = value;
