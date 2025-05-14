@@ -56,11 +56,12 @@
   <h2>📊 Task Progress Counter</h2>
 
   <label for="startTime">Start Time:</label>
-  <input type="time" id="startTime">
+  <select id="startTime">
+    <!-- JavaScript will generate 15-minute increments between 6:00 AM and 12:00 PM -->
+  </select>
 
   <label for="tasksPerHour">Tasks Per Hour:</label>
   <select id="tasksPerHour">
-    <!-- Generate options from 15 to 50 -->
     <script>
       for (let i = 15; i <= 50; i++) {
         document.write(`<option value="${i}">${i}</option>`);
@@ -79,10 +80,27 @@
     <option value="60">60 Minutes</option>
   </select>
 
-  <div id="counter">Tasks completed: 0</div>
+  <div id="counter">Task Target: 0</div>
 
   <script>
     const TOTAL_HOURS = 8;
+
+    // Populate startTime dropdown with 15-minute intervals (6:00 AM to 12:00 PM)
+    const startTimeSelect = document.getElementById('startTime');
+    for (let hour = 6; hour <= 12; hour++) {
+      for (let min = 0; min < 60; min += 15) {
+        const hourStr = hour.toString().padStart(2, '0');
+        const minStr = min.toString().padStart(2, '0');
+        const value = `${hourStr}:${minStr}`;
+        const displayHour = hour > 12 ? hour - 12 : hour;
+        const ampm = hour < 12 ? 'AM' : 'PM';
+        const display = `${displayHour}:${minStr} ${ampm}`;
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = display;
+        startTimeSelect.appendChild(option);
+      }
+    }
 
     function updateCounter() {
       const startTime = document.getElementById('startTime').value;
@@ -103,7 +121,7 @@
       const maxTasks = tasksPerHour * TOTAL_HOURS;
       const tasksDone = Math.min(Math.floor(diffHours * tasksPerHour), maxTasks);
 
-      document.getElementById('counter').innerText = `Tasks completed: ${tasksDone}`;
+      document.getElementById('counter').innerText = `Task Target: ${tasksDone}`;
     }
 
     setInterval(updateCounter, 1000);
